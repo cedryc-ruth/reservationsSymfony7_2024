@@ -1,4 +1,12 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'method': method|default('POST')}) }}
+     <div {% if form.firstname.vars.errors is not empty %}class="is-invalid"{% endif %}>
+            {{ form_label(form.firstname, 'Prénom') }} {{ form_widget(form.firstname) }}
+            {{ form_errors(form.firstname) }}
+        </div>
+        <div {% if form.lastname.vars.errors is not empty %}class="is-invalid"{% endif %}>
+            {{ form_label(form.lastname, 'Nom') }} {{ form_widget(form.lastname) }}
+            {{ form_errors(form.lastname) }}
+        </div>
+
+        {{ form_row(form.save, { 'label': button_label|default('Ajouter') }) }}
 {{ form_end(form) }}
