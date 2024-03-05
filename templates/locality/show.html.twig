@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fiche d'une localité{% endblock %}
+
+{% block body %}
+    <h1>{{ locality.postalCode }} {{ locality.locality|capitalize }}</h1>
+
+    <ul>
+    {% for location in locality.locations %}
+        <li>{{ location.designation }}</li>
+    {% endfor %}
+    </ul>
+
+
+    <nav>
+        <a href="{{ path('app_locality_index') }}">Retour à l'index</a>
+        <a href="{{ path('app_locality_edit', {'id': locality.id}) }}">edit</a>
+    </nav>
+
+    {{ include('locality/_delete_form.html.twig') }}
+{% endblock %}
