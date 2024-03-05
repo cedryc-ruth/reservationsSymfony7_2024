@@ -1,4 +1,4 @@
-{{ form_start(form, {'method': method|default('POST')}) }}
+{{ form_start(form, {'method': http_method|default('POST')}) }}
      <div {% if form.firstname.vars.errors is not empty %}class="is-invalid"{% endif %}>
             {{ form_label(form.firstname, 'Prénom') }} {{ form_widget(form.firstname) }}
             {{ form_errors(form.firstname) }}
