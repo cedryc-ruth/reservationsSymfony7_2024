@@ -15,7 +15,7 @@ class ArtistType extends AbstractType
         $builder
             ->add('firstname')
             ->add('lastname')
-            ->add('save', SubmitType::class, ['label' => 'Modifier'])
+            ->add('save', SubmitType::class)
         ;
     }
 
