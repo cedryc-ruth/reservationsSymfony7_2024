@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Create new Artist</h1>
 
-    {{ include('artist/_form.html.twig', {'method': 'POST', 'button_label': 'Ajouter'}) }}
+    {{ include('artist/_form.html.twig', {'http_method': 'POST', 'button_label': 'Ajouter'}) }}
 
     <a href="{{ path('app_artist_index') }}">back to list</a>
 {% endblock %}
