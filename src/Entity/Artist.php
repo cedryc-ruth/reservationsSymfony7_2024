@@ -33,13 +33,13 @@ class Artist
         maxMessage: 'Your lastname cannot be longer than {{ limit }} characters',
     )]
     private ?string $lastname = null;
-
-    #[ORM\ManyToMany(targetEntity: Type::class, inversedBy: 'artists')]
-    private Collection $types;
+    
+    #[ORM\OneToMany(targetEntity: ArtistType::class, mappedBy: 'artist')]
+    private Collection $artistTypes;
 
     public function __construct()
     {
-        $this->types = new ArrayCollection();
+        $this->artistTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,25 +72,31 @@ class Artist
     }
 
     /**
-     * @return Collection<int, Type>
+     * @return Collection<int, ArtistType>
      */
-    public function getTypes(): Collection
+    public function getArtistTypes(): Collection
     {
-        return $this->types;
+        return $this->artistTypes;
     }
 
-    public function addType(Type $type): static
+    public function addArtistType(ArtistType $artistType): static
     {
-        if (!$this->types->contains($type)) {
-            $this->types->add($type);
+        if (!$this->artistTypes->contains($artistType)) {
+            $this->artistTypes->add($artistType);
+            $artistType->setArtist($this);
         }
 
         return $this;
     }
 
-    public function removeType(Type $type): static
+    public function removeArtistType(ArtistType $artistType): static
     {
-        $this->types->removeElement($type);
+        if ($this->artistTypes->removeElement($artistType)) {
+            // set the owning side to null (unless already changed)
+            if ($artistType->getArtist() === $this) {
+                $artistType->setArtist(null);
+            }
+        }
 
         return $this;
     }

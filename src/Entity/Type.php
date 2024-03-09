@@ -19,12 +19,12 @@ class Type
     #[ORM\Column(length: 60)]
     private ?string $type = null;
 
-    #[ORM\ManyToMany(targetEntity: Artist::class, mappedBy: 'types')]
-    private Collection $artists;
+    #[ORM\OneToMany(targetEntity: ArtistType::class, mappedBy: 'type')]
+    private Collection $artistTypes;
 
     public function __construct()
     {
-        $this->artists = new ArrayCollection();
+        $this->artistTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -43,29 +43,32 @@ class Type
 
         return $this;
     }
-
+    
     /**
-     * @return Collection<int, Artist>
+     * @return Collection<int, ArtistType>
      */
-    public function getArtists(): Collection
+    public function getArtistTypes(): Collection
     {
-        return $this->artists;
+        return $this->artistTypes;
     }
 
-    public function addArtist(Artist $artist): static
+    public function addArtistType(ArtistType $artistType): static
     {
-        if (!$this->artists->contains($artist)) {
-            $this->artists->add($artist);
-            $artist->addType($this);
+        if (!$this->artistTypes->contains($artistType)) {
+            $this->artistTypes->add($artistType);
+            $artistType->setType($this);
         }
 
         return $this;
     }
 
-    public function removeArtist(Artist $artist): static
+    public function removeArtistType(ArtistType $artistType): static
     {
-        if ($this->artists->removeElement($artist)) {
-            $artist->removeType($this);
+        if ($this->artistTypes->removeElement($artistType)) {
+            // set the owning side to null (unless already changed)
+            if ($artistType->getType() === $this) {
+                $artistType->setType(null);
+            }
         }
 
         return $this;
