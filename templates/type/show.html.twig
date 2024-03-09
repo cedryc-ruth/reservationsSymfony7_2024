@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fiche d'un type{% endblock %}
+
+{% block body %}
+    <h1>{{ type.type }}</h1>
+    
+    <h2>Liste des artistes</h2>
+    <ul>
+    {% for artist in type.artists %}
+        <li>{{ artist.firstname }} {{ artist.lastname }}</li>
+    {% endfor %}
+    </ul>
+
+
+    <nav><a href="{{ path('app_type_index') }}">Retour à l'index</a></nav>
+
+    <a href="{{ path('app_type_edit', {'id': type.id}) }}">edit</a>
+
+    {{ include('type/_delete_form.html.twig') }}
+{% endblock %}
