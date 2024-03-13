@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des lieux{% endblock %}
+
+{% block body %}
+    <h1>Liste des {{ resource }}</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Slug</th>
+                <th>Designation</th>
+                <th>Address</th>
+                <th>Website</th>
+                <th>Phone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for location in locations %}
+            <tr>
+                <td>{{ location.id }}</td>
+                <td>{{ location.slug }}</td>
+                <td>{{ location.designation }}</td>
+                <td>{{ location.address }}</td>
+                <td>
+            {% if location.website %}
+                <a href="{{ location.website }}">{{ location.website }}</a>
+            {% endif %}
+                </td>
+                <td>{{ location.phone }}</td>
+                <td>
+                    <a href="{{ path('app_location_show', {'id': location.id}) }}">show</a>
+                    <a href="{{ path('app_location_edit', {'id': location.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_location_new') }}">Create new</a>
+{% endblock %}
