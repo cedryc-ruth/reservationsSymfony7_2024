@@ -29,12 +29,10 @@ security:
             stateless: true
             jwt: ~
 
-        # # Firewall pour l'authentification basique
-        # basic_auth:
-        #     pattern: ^/api # Routes API protégées par Basic Auth
-        #     stateless: true
-        #     provider: app_user_provider
-        #     http_basic: ~ # Active Basic Auth
+            #Authentification basique
+            provider: app_user_provider
+            http_basic: ~ # Active Basic Auth
+            entry_point: security.authenticator.form_login.main
 
         # Firewall pour les pages Web
         main:
@@ -71,10 +69,14 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         
+        # Permet l'accès à Swagger UI
+        - { path: ^/api$, roles: PUBLIC_ACCESS }
+        # Permet l'accès à Swagger UI docs
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         # Permet l'accès sans authentification
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         # Restreindre l'accès à l'API aux utilisateurs authentifiés
-        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
