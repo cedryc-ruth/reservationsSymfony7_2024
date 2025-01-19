@@ -13,14 +13,30 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
-        # Firewall pour l'API
-        api:
-            pattern: ^/api
-            stateless: true
-            http_basic: ~ # Active l'authentification basique
-            provider: app_user_provider
 
+        #Firewall pour obtenir le token JWT
+        login:
+            pattern: ^/api/login
+            stateless: true
+            json_login:
+                check_path: /api/login_check
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        #Firewall pour les routes JWT
+        api:
+            pattern:   ^/api
+            stateless: true
+            jwt: ~
+
+        # # Firewall pour l'authentification basique
+        # basic_auth:
+        #     pattern: ^/api # Routes API protégées par Basic Auth
+        #     stateless: true
+        #     provider: app_user_provider
+        #     http_basic: ~ # Active Basic Auth
+
+        # Firewall pour les pages Web
         main:
             lazy: true
             provider: app_user_provider
@@ -54,8 +70,11 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        
+        # Permet l'accès sans authentification
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
         # Restreindre l'accès à l'API aux utilisateurs authentifiés
-        - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:
