@@ -45,9 +45,13 @@ class Location
     #[ORM\OneToMany(targetEntity: Show::class, mappedBy: 'location')]
     private Collection $shows;
 
+    #[ORM\OneToMany(targetEntity: Room::class, mappedBy: 'location')]
+    private Collection $rooms;
+
     public function __construct()
     {
         $this->shows = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,6 +155,36 @@ class Location
             // set the owning side to null (unless already changed)
             if ($show->getLocation() === $this) {
                 $show->setLocation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): static
+    {
+        if (!$this->rooms->contains($room)) {
+            $this->rooms->add($room);
+            $room->setLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): static
+    {
+        if ($this->rooms->removeElement($room)) {
+            // set the owning side to null (unless already changed)
+            if ($room->getLocation() === $this) {
+                $room->setLocation(null);
             }
         }
 

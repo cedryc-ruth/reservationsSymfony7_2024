@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ShowRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,6 +40,14 @@ class Show
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $price = null;
+
+    #[ORM\OneToMany(targetEntity: Representation::class, mappedBy: 'theShow')]
+    private Collection $representations;
+
+    public function __construct()
+    {
+        $this->representations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +134,36 @@ class Show
     public function setPrice(?string $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Representation>
+     */
+    public function getRepresentations(): Collection
+    {
+        return $this->representations;
+    }
+
+    public function addRepresentation(Representation $representation): static
+    {
+        if (!$this->representations->contains($representation)) {
+            $this->representations->add($representation);
+            $representation->setTheShow($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRepresentation(Representation $representation): static
+    {
+        if ($this->representations->removeElement($representation)) {
+            // set the owning side to null (unless already changed)
+            if ($representation->getTheShow() === $this) {
+                $representation->setTheShow(null);
+            }
+        }
 
         return $this;
     }

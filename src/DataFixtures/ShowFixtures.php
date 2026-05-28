@@ -75,6 +75,8 @@ class ShowFixtures extends Fixture implements DependentFixtureInterface
             $show->setPrice($record['price']);
             
             $manager->persist($show);
+
+            $this->addReference($show->getSlug(), $show);
         }
 
         $manager->flush();
